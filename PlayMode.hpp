@@ -16,6 +16,7 @@ struct PlayMode : Mode {
 	virtual void draw(glm::uvec2 const &drawable_size) override;
 
 	//----- game state -----
+	void start_new_game();
 
 	//input tracking:
 	struct Button {

@@ -91,7 +91,7 @@ PlayMode::PlayMode() {
 		glm::u8vec4(0x00, 0x00, 0x00, 0x00),
 		glm::u8vec4(0xff, 0xff, 0x00, 0xff),
 		glm::u8vec4(0x00, 0x00, 0x00, 0xff),
-		glm::u8vec4(0x00, 0x00, 0x00, 0xff),
+		glm::u8vec4(0x00, 255, 0x00, 0xff),
 	};
 
 	//used for the misc other sprites:
@@ -147,6 +147,7 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 }
 
 void PlayMode::update(float elapsed) {
+	using namespace std;
 
 	//slowly rotates through [0,1):
 	// (will be used to set background color)
@@ -159,6 +160,24 @@ void PlayMode::update(float elapsed) {
 	if (down.pressed) player_at.y -= PlayerSpeed * elapsed;
 	if (up.pressed) player_at.y += PlayerSpeed * elapsed;
 
+	//Taken from game 0 :)
+	for(int i = 1; i < 64; i++) {
+		glm::vec2 &obj = glm::vec2(ppu.sprites[0].x, ppu.sprites[0].y);
+		glm::vec2 &other = glm::vec2(ppu.sprites[i].x, ppu.sprites[i].y);
+
+		bool hitSomething = false;
+		
+		//compute area of overlap:
+		glm::vec2 min = glm::max(obj, other);
+		glm::vec2 max = glm::min(obj + 8.0f, other + 8.0f);
+
+		//if no overlap, no collision:
+		if (min.x > max.x || min.y > max.y) continue;
+
+		start_new_game();
+	}
+	
+	cout << (int)ppu.sprites[0].x << " " << (int)ppu.sprites[0].y << endl;
 	//reset button press counters:
 	left.downs = 0;
 	right.downs = 0;
@@ -203,9 +222,15 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 		ppu.sprites[i].y = int32_t(0.5f * PPU466::ScreenHeight + std::sin( 2.0f * M_PI * amt * 3.0f + 0.01f * player_at.y) * 0.4f * PPU466::ScreenWidth);
 		ppu.sprites[i].index = 32;
 		ppu.sprites[i].attributes = 6;
-		if (i % 2) ppu.sprites[i].attributes |= 0x80; //'behind' bit
+		//if (i % 2) ppu.sprites[i].attributes |= 0x80; //'behind' bit
 	}
 
 	//--- actually draw ---
 	ppu.draw(drawable_size);
+}
+
+void PlayMode::start_new_game() {
+	using namespace std;
+	std::cout << "Starting new game "<< i << std::endl;
+
 }
