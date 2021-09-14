@@ -24,12 +24,17 @@ struct PlayMode : Mode {
 		uint8_t pressed = 0;
 	} left, right, down, up;
 
+	int jumps;
+	float jump_timer;
+	bool can_jump;
+	double score, highscore;
+
 	//some weird background animation:
 	float background_fade = 0.0f;
 
 	//player position:
 	glm::vec2 player_at = glm::vec2(0.0f);
-
+	std::vector<glm::vec2> velocities;
 	//----- drawing handled by PPU466 -----
 
 	PPU466 ppu;
