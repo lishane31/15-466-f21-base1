@@ -34,6 +34,7 @@ struct PlayMode : Mode {
 
 	//player position:
 	glm::vec2 player_at = glm::vec2(0.0f);
+	std::vector<glm::vec2> objs_at;
 	std::vector<glm::vec2> velocities;
 	//----- drawing handled by PPU466 -----
 
